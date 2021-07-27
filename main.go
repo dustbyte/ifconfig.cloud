@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/google/uuid"
@@ -41,6 +42,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	configuration := "0.0.0.0:8000"
 	log.SetFormatter(&log.JSONFormatter{})
+	log.SetOutput(os.Stdout)
 
 	flag.Parse()
 	if flag.NArg() > 0 {
