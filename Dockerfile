@@ -1,3 +1,8 @@
-FROM nginx:1.19.8
+FROM golang:1.16.6
 
-COPY nginx.conf /etc/nginx
+WORKDIR /go/src/app
+COPY . .
+
+RUN go build .
+
+ENTRYPOINT ["go", "run", "."]
