@@ -14,6 +14,10 @@ func fromXForwardedFor(x_forwarded_for string) string {
 	return strings.TrimSpace(strings.Split(x_forwarded_for, ",")[0])
 }
 
+func fromRemoteAddr(remote_addr string) string {
+	return strings.Split(remote_addr, ":")[0]
+}
+
 func handler(w http.ResponseWriter, r *http.Request) {
 	var remote_addr string
 	uu_id := uuid.NewString()
@@ -26,7 +30,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		remote_addr = fromXForwardedFor(x_forwarded_for)
 	} else {
 		logger.Info(" RemoteAddr: ", remote_addr)
-		remote_addr = strings.Split(r.RemoteAddr, ":")[0]
+		remote_addr = fromRemoteAddr(r.RemoteAddr)
 	}
 
 	logger.Info("replying to ", remote_addr)
