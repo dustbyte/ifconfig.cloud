@@ -41,3 +41,8 @@ jobs:
           context: .
           push: true
           tags: mota/ifconfig:latest
+
+      - uses: jjst/action-digitalocean-deploy-app@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+          spec: ./deploy/ifconfig-cloud.yaml
