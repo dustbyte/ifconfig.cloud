@@ -26,8 +26,7 @@ jobs:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
     steps:
-      - name: Check out the repo
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
@@ -41,6 +40,13 @@ jobs:
           context: .
           push: true
           tags: mota/ifconfig:latest
+
+  deploy:
+    needs: push_to_registry
+    name: Deploy to Digital Ocean
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
 
       - uses: jjst/action-digitalocean-deploy-app@v2
         with:
