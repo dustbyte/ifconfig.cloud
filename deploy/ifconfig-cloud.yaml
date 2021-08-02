@@ -2,6 +2,14 @@ domains:
 - domain: ifconfig.cloud
   type: PRIMARY
   zone: ifconfig.cloud
+envs:
+- key: NEWRELIC_CONFIG_LICENSE
+  scope: RUN_AND_BUILD_TIME
+  type: SECRET
+  value: EV[1:Nc/ZrJQXfd/zqcN3tSDuBSKs5Ta+ssr5:u9Ejk24X/uGEpKgeaZAhMDjdmcBePOzZ4M0nmCe9qwdvXH2gPCEgOD7Mdu7NAadP2EnB3ZMbluk=]
+- key: NEWRELIC_APP_NAME
+  scope: RUN_AND_BUILD_TIME
+  value: ifconfig.cloud
 name: ifconfig-cloud
 region: nyc
 services:

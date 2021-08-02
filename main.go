@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/google/uuid"
+	"github.com/newrelic/go-agent/v3/newrelic"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -21,22 +21,15 @@ func fromRemoteAddr(remote_addr string) string {
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	var remote_addr string
-	uu_id := uuid.NewString()
-	logger := log.WithFields(log.Fields{"uuid": uu_id})
 
-	logger.Info("started")
 	x_forwarded_for := r.Header.Get("X-Forwarded-For")
 	if x_forwarded_for != "" {
-		logger.Info("X-Forwarded-For: ", x_forwarded_for)
 		remote_addr = fromXForwardedFor(x_forwarded_for)
 	} else {
-		logger.Info(" RemoteAddr: ", remote_addr)
 		remote_addr = fromRemoteAddr(r.RemoteAddr)
 	}
 
-	logger.Info("replying to ", remote_addr)
 	fmt.Fprintf(w, remote_addr)
-	logger.Info("terminated")
 }
 
 func main() {
@@ -44,12 +37,23 @@ func main() {
 	log.SetFormatter(&log.JSONFormatter{})
 	log.SetOutput(os.Stdout)
 
+	app, err := newrelic.NewApplication(
+		newrelic.ConfigAppName(os.Getenv("NEWRELIC_APP_NAME")),
+		newrelic.ConfigLicense(os.Getenv("NEWRELIC_CONFIG_LICENSE")),
+		newrelic.ConfigDistributedTracerEnabled(true),
+	)
+
+	if err != nil {
+		log.Error("Couldn't initialize New Relic")
+		os.Exit(1)
+	}
+
 	flag.Parse()
 	if flag.NArg() > 0 {
 		configuration = flag.Args()[0]
 	}
 
 	log.Info("Starting server listening to: ", configuration)
-	http.HandleFunc("/", handler)
+	http.HandleFunc(newrelic.WrapHandleFunc(app, "/", handler))
 	http.ListenAndServe(configuration, nil)
 }
