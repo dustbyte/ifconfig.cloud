@@ -1,4 +1,4 @@
-module github.com/mota/ifconfig
+module github.com/dustbyte/ifconfig
 
 go 1.16
 
