@@ -34,6 +34,13 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	configuration := "0.0.0.0:8000"
+
+	useNewRelic := flag.Bool("use-newrelic", false, "Turn on newrelic")
+	flag.Parse()
+	if flag.NArg() > 0 {
+		configuration = flag.Args()[0]
+	}
+
 	log.SetFormatter(&log.JSONFormatter{})
 	log.SetOutput(os.Stdout)
 
@@ -41,16 +48,14 @@ func main() {
 		newrelic.ConfigAppName(os.Getenv("NEWRELIC_APP_NAME")),
 		newrelic.ConfigLicense(os.Getenv("NEWRELIC_CONFIG_LICENSE")),
 		newrelic.ConfigDistributedTracerEnabled(true),
+		func(config *newrelic.Config) {
+			config.Enabled = *useNewRelic
+		},
 	)
 
 	if err != nil {
 		log.Error("Couldn't initialize New Relic")
 		os.Exit(1)
-	}
-
-	flag.Parse()
-	if flag.NArg() > 0 {
-		configuration = flag.Args()[0]
 	}
 
 	log.Info("Starting server listening to: ", configuration)
