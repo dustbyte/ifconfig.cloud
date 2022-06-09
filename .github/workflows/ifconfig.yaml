@@ -40,15 +40,3 @@ jobs:
           context: .
           push: true
           tags: mota/ifconfig:latest
-
-  deploy:
-    needs: push_to_registry
-    name: Deploy to Digital Ocean
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: jjst/action-digitalocean-deploy-app@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-          spec: ./deploy/ifconfig-cloud.yaml
