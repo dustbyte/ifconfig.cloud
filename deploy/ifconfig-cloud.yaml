@@ -6,7 +6,7 @@ envs:
 - key: NEWRELIC_CONFIG_LICENSE
   scope: RUN_AND_BUILD_TIME
   type: SECRET
-  value: EV[1:Nc/ZrJQXfd/zqcN3tSDuBSKs5Ta+ssr5:u9Ejk24X/uGEpKgeaZAhMDjdmcBePOzZ4M0nmCe9qwdvXH2gPCEgOD7Mdu7NAadP2EnB3ZMbluk=]
+  value: EV[1:irv+8JpvfGNu4gTJ+m+WPzYbZzgAlvyB:Hbmq5DgLvV8OmsMZ73I1wCWvZWeB6AY4F4dNdyy5o7gRVu2BIVR2NrkBLdhhKEq4dnteTn4ubTs=]
 - key: NEWRELIC_APP_NAME
   scope: RUN_AND_BUILD_TIME
   value: ifconfig.cloud
@@ -22,6 +22,7 @@ services:
   instance_count: 1
   instance_size_slug: basic-xxs
   name: ifconfig-cloud
+  run_command: "go run . -use-newrelic"
   routes:
   - path: /
   source_dir: /
